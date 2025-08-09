@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(move postcss.config.js postcss.config.cjs)",
+      "Bash(mv:*)",
+      "Bash(uvicorn:*)"
+    ],
+    "deny": []
+  }
+}
