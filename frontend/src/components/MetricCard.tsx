@@ -1,5 +1,15 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
 interface MetricCardProps {
   title: string;
@@ -12,6 +22,7 @@ interface MetricCardProps {
     value: number;
     max: number;
   };
+  trendData?: number[];
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
@@ -21,7 +32,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
   type,
   className = '',
   details = [],
-  chartData
+  chartData,
+  trendData = []
 }) => {
   const getStatusColor = (value: number, type: string): string => {
     switch (type) {
@@ -79,6 +91,46 @@ const MetricCard: React.FC<MetricCardProps> = ({
     );
   };
 
+  const renderTrendChart = () => {
+    if (!trendData.length || type === 'network') return null;
+
+    const data = {
+      labels: Array.from({length: trendData.length}, (_, i) => ''),
+      datasets: [
+        {
+          data: trendData,
+          borderColor: 'rgba(255,255,255,0.8)',
+          backgroundColor: 'rgba(255,255,255,0.1)',
+          tension: 0.4,
+          pointRadius: 0,
+          borderWidth: 2,
+          fill: true,
+        },
+      ],
+    };
+
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        x: { display: false },
+        y: { display: false },
+      },
+      elements: {
+        point: { radius: 0 },
+      },
+    };
+
+    return (
+      <div className="h-12 mt-2">
+        <Line data={data} options={options} />
+      </div>
+    );
+  };
+
   return (
     <div className={`metric-card ${className} flex flex-col h-full`}>
       <div className="flex items-center justify-between mb-4">
@@ -94,6 +146,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
       </div>
 
       {renderChart()}
+
+      {renderTrendChart()}
 
       {details.length > 0 && (
         <div className="mt-auto space-y-2">
