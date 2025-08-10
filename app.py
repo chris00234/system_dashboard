@@ -10,14 +10,16 @@ app = FastAPI(
     title="System Dashboard API",
     description="Real-time system monitoring dashboard with FastAPI backend",
     version="2.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    root_path="/dashboard",
+    docs_url="/dashboard/docs",
+    redoc_url="/dashboard/redoc"
 )
 
 # Add CORS middleware for React frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://chrischodev.com",  # Production domain
         "http://localhost:3000",  # React dev server
         "http://localhost:5173",  # Vite dev server
         "http://localhost:5174",  # Vite dev server (alternative port)
@@ -31,7 +33,7 @@ app.add_middleware(
         "http://127.0.0.1:5175",
         "http://127.0.0.1:5176",
         "http://127.0.0.1:5177",
-        "http://127.0.0.1:5178",
+        "http://127.0.0.1:5178"
     ],
     allow_credentials=True,
     allow_methods=["*"],
